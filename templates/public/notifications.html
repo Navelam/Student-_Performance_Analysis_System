@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications - Public View{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-bell text-purple me-2"></i>Notifications</h2>
+            <p class="text-muted">View announcements and updates</p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5><i class="fas fa-info-circle text-info me-2"></i>Welcome to SPAS</h5>
+                    <p class="text-muted mb-2">Posted on {{ now.strftime('%d %b %Y') }}</p>
+                    <p>Welcome to the Student Performance Analysis System. Check back for updates and announcements.</p>
+                </div>
+            </div>
+            
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5><i class="fas fa-calendar-check text-success me-2"></i>Exam Schedule Published</h5>
+                    <p class="text-muted mb-2">Posted on {{ now.strftime('%d %b %Y') }}</p>
+                    <p>The exam timetable for March 2026 has been published. Please check the Exam Timetable section.</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-purple">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

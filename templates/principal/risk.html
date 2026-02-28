@@ -1,0 +1,728 @@
+{% extends "principal/base_principal.html" %}
+
+{% block title %}Risk Monitoring - Principal{% endblock %}
+
+{% block header_title %}Risk Monitoring{% endblock %}
+{% block header_subtitle %}Monitor students by risk level{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Loading Spinner */
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 50px;
+        background: white;
+        border-radius: 15px;
+        margin: 20px 0;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3e9ff;
+        border-top: 5px solid #6f42c1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Filter Section */
+    .filter-section {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    
+    .filter-form {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 180px;
+    }
+    
+    .filter-group label {
+        font-weight: 600;
+        color: #6f42c1;
+        margin-bottom: 5px;
+        display: block;
+        font-size: 0.9rem;
+    }
+    
+    .filter-group label i {
+        margin-right: 5px;
+    }
+    
+    .filter-select, .filter-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        transition: all 0.3s;
+        background: white;
+    }
+    
+    .filter-select:focus, .filter-input:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+    }
+    
+    .btn-reset {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-reset:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+    
+    /* Risk Summary Pills */
+    .risk-summary {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+    
+    .risk-pill {
+        padding: 10px 25px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        cursor: pointer;
+        border: none;
+    }
+    
+    .risk-pill:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .risk-pill.active {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    
+    .risk-critical { 
+        background: #dc3545; 
+        color: white; 
+    }
+    .risk-critical:hover { background: #c82333; }
+    
+    .risk-high { 
+        background: #fd7e14; 
+        color: white; 
+    }
+    .risk-high:hover { background: #e06b00; }
+    
+    .risk-average { 
+        background: #ffc107; 
+        color: #2c3e50; 
+    }
+    .risk-average:hover { background: #e0a800; }
+    
+    .risk-safe { 
+        background: #28a745; 
+        color: white; 
+    }
+    .risk-safe:hover { background: #218838; }
+    
+    .risk-best { 
+        background: #6f42c1; 
+        color: white; 
+    }
+    .risk-best:hover { background: #5e34a0; }
+    
+    /* Table Styles */
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e9ecef;
+        position: relative;
+        min-height: 400px;
+    }
+    
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .student-table thead {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+    }
+    
+    .student-table th {
+        padding: 15px 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-align: left;
+        white-space: nowrap;
+    }
+    
+    .student-table th i {
+        margin-right: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .student-table tbody tr {
+        border-bottom: 1px solid #e9ecef;
+        transition: all 0.2s;
+    }
+    
+    .student-table tbody tr:hover {
+        background: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .student-table td {
+        padding: 12px;
+        vertical-align: middle;
+    }
+    
+    /* Row Colors by Risk */
+    .row-critical { background: #fff5f5; }
+    .row-critical:hover { background: #ffe3e3 !important; }
+    
+    .row-high { background: #fff3e0; }
+    .row-high:hover { background: #ffe4c4 !important; }
+    
+    .row-average { background: #fff9e6; }
+    .row-average:hover { background: #fff2cc !important; }
+    
+    .row-safe { background: #f0fff4; }
+    .row-safe:hover { background: #dcffe4 !important; }
+    
+    .row-best { background: #f3e9ff; }
+    .row-best:hover { background: #e6d9ff !important; }
+    
+    /* Badges */
+    .student-id-badge {
+        background: #f3e9ff;
+        color: #6f42c1;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+    
+    .reg-number {
+        font-family: monospace;
+        color: #6c757d;
+        font-size: 0.85rem;
+    }
+    
+    .risk-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-block;
+        text-align: center;
+        min-width: 90px;
+    }
+    
+    .grade-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: #f3e9ff;
+        color: #6f42c1;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .attendance-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .attendance-good {
+        background: #28a745;
+        color: white;
+    }
+    
+    .attendance-warning {
+        background: #ffc107;
+        color: #2c3e50;
+    }
+    
+    .attendance-danger {
+        background: #dc3545;
+        color: white;
+    }
+    
+    .marks-highlight {
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    /* Action Buttons */
+    .btn-view {
+        background: transparent;
+        border: 2px solid #6f42c1;
+        color: #6f42c1;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .btn-view:hover {
+        background: #6f42c1;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(111,66,193,0.3);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        border: 1px solid #e9ecef;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h4 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+    
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 20px;
+    }
+    
+    .page-item {
+        list-style: none;
+    }
+    
+    .page-link {
+        display: block;
+        padding: 8px 15px;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        color: #6f42c1;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .page-link:hover {
+        background: #f3e9ff;
+        border-color: #6f42c1;
+    }
+    
+    .page-link.active {
+        background: #6f42c1;
+        color: white;
+        border-color: #6f42c1;
+    }
+    
+    /* Search Box */
+    .search-box {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .search-box input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .search-box input:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111,66,193,0.1);
+    }
+    
+    .search-box i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6f42c1;
+    }
+    
+    /* Export Button */
+    .btn-export {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-export:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .filter-form {
+            flex-direction: column;
+        }
+        
+        .filter-group {
+            width: 100%;
+        }
+        
+        .student-table {
+            font-size: 0.9rem;
+        }
+        
+        .student-table th, 
+        .student-table td {
+            padding: 8px 5px;
+        }
+        
+        .risk-badge {
+            min-width: 70px;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-container" style="display: none;">
+    <div class="spinner"></div>
+    <h5 class="text-purple">Loading student data...</h5>
+    <p class="text-muted">Please wait while we fetch the information</p>
+</div>
+
+<!-- Main Content -->
+<div id="mainContent">
+    <!-- Risk Summary Pills -->
+    <div class="risk-summary">
+        <button class="risk-pill risk-critical" onclick="filterByRisk('Critical')">
+            Critical <span class="badge bg-light text-dark ms-2">{{ risk_counts.Critical }}</span>
+        </button>
+        <button class="risk-pill risk-high" onclick="filterByRisk('High Risk')">
+            High Risk <span class="badge bg-light text-dark ms-2">{{ risk_counts['High Risk'] }}</span>
+        </button>
+        <button class="risk-pill risk-average" onclick="filterByRisk('Average')">
+            Average <span class="badge bg-light text-dark ms-2">{{ risk_counts.Average }}</span>
+        </button>
+        <button class="risk-pill risk-safe" onclick="filterByRisk('Safe')">
+            Safe <span class="badge bg-light text-dark ms-2">{{ risk_counts.Safe }}</span>
+        </button>
+        <button class="risk-pill risk-best" onclick="filterByRisk('Best')">
+            Best <span class="badge bg-light text-dark ms-2">{{ risk_counts.Best }}</span>
+        </button>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-section">
+        <form method="GET" action="{{ url_for('principal.risk_monitoring') }}" id="filterForm" class="filter-form">
+            <div class="filter-group">
+                <label><i class="fas fa-exclamation-triangle"></i> Risk Level</label>
+                <select name="risk" class="filter-select" onchange="this.form.submit()">
+                    <option value="all" {% if selected_risk == 'all' %}selected{% endif %}>All Risks</option>
+                    <option value="Critical" {% if selected_risk == 'Critical' %}selected{% endif %}>Critical</option>
+                    <option value="High Risk" {% if selected_risk == 'High Risk' %}selected{% endif %}>High Risk</option>
+                    <option value="Average" {% if selected_risk == 'Average' %}selected{% endif %}>Average</option>
+                    <option value="Safe" {% if selected_risk == 'Safe' %}selected{% endif %}>Safe</option>
+                    <option value="Best" {% if selected_risk == 'Best' %}selected{% endif %}>Best</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-building"></i> Department</label>
+                <select name="department" class="filter-select" onchange="this.form.submit()">
+                    <option value="all" {% if selected_dept == 'all' %}selected{% endif %}>All Departments</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept.id }}" {% if selected_dept == dept.id|string %}selected{% endif %}>
+                        {{ dept.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-layer-group"></i> Semester</label>
+                <select name="semester" class="filter-select" onchange="this.form.submit()">
+                    <option value="all" {% if selected_sem == 'all' %}selected{% endif %}>All Semesters</option>
+                    {% for sem in semesters %}
+                    <option value="{{ sem }}" {% if selected_sem == sem|string %}selected{% endif %}>
+                        Semester {{ sem }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label><i class="fas fa-search"></i> Search</label>
+                <input type="text" name="search" class="filter-input" placeholder="Name or Reg No..." 
+                       value="{{ request.args.get('search', '') }}" id="searchInput">
+            </div>
+            
+            <div class="filter-group" style="flex: 0 0 auto;">
+                <button type="button" class="btn-reset" onclick="resetFilters()">
+                    <i class="fas fa-redo-alt"></i> Reset
+                </button>
+            </div>
+            
+            <div class="filter-group" style="flex: 0 0 auto;">
+                <button type="button" class="btn-export" onclick="exportToCSV()">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Search Results Info -->
+    {% if request.args.get('search') %}
+    <div class="alert alert-info mb-3">
+        <i class="fas fa-search me-2"></i>
+        Showing results for: <strong>"{{ request.args.get('search') }}"</strong>
+        <a href="{{ url_for('principal.risk_monitoring') }}" class="float-end text-decoration-none">Clear</a>
+    </div>
+    {% endif %}
+
+    <!-- Students Table -->
+    <div class="table-container">
+        {% if student_data %}
+        <div class="table-responsive">
+            <table class="student-table" id="studentTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-id-card"></i> Student ID</th>
+                        <th><i class="fas fa-qrcode"></i> Reg No</th>
+                        <th><i class="fas fa-user"></i> Name</th>
+                        <th><i class="fas fa-building"></i> Department</th>
+                        <th><i class="fas fa-layer-group"></i> Sem</th>
+                        <th><i class="fas fa-book"></i> Subject</th>
+                        <th><i class="fas fa-clock"></i> Attendance</th>
+                        <th><i class="fas fa-star"></i> Marks</th>
+                        <th><i class="fas fa-tag"></i> Grade</th>
+                        <th><i class="fas fa-exclamation-triangle"></i> Risk</th>
+                        <th><i class="fas fa-cog"></i> Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in student_data %}
+                    <tr class="row-{{ student.risk|lower|replace(' ', '') }}" data-risk="{{ student.risk }}">
+                        <td>
+                            <span class="student-id-badge">
+                                <i class="fas fa-id-card me-1"></i>{{ student.student_id }}
+                            </span>
+                        </td>
+                        <td><span class="reg-number">{{ student.reg_number }}</span></td>
+                        <td>
+                            <strong>{{ student.name }}</strong>
+                            {% if student.attendance < 70 %}
+                            <i class="fas fa-exclamation-circle text-danger ms-1" title="Low Attendance"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ student.department }}</td>
+                        <td><span class="badge bg-secondary">Sem {{ student.semester }}</span></td>
+                        <td>{{ student.subject }}</td>
+                        <td>
+                            {% set attendance_class = 'attendance-good' if student.attendance >= 75 else 'attendance-warning' if student.attendance >= 70 else 'attendance-danger' %}
+                            <span class="attendance-badge {{ attendance_class }}">
+                                {{ student.attendance }}%
+                            </span>
+                        </td>
+                        <td><span class="marks-highlight">{{ student.marks }}/20</span></td>
+                        <td><span class="grade-badge">{{ student.grade }}</span></td>
+                        <td>
+                            <span class="risk-badge risk-{{ student.risk|lower|replace(' ', '') }}" 
+                                  style="background: {% if student.risk == 'Critical' %}#dc3545{% elif student.risk == 'High Risk' %}#fd7e14{% elif student.risk == 'Average' %}#ffc107{% elif student.risk == 'Best' %}#6f42c1{% else %}#28a745{% endif %}; color: white;">
+                                {{ student.risk }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/hod/student-detail/{{ student.id }}" class="btn-view">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Table Footer with Count -->
+        <div class="p-3 bg-light border-top">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>
+                    <strong>{{ student_data|length }}</strong> students found
+                </span>
+                <span class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Click on risk pills to filter
+                </span>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <h4>No Students Found</h4>
+            <p class="text-muted">No students match your current filter criteria.</p>
+            <button onclick="resetFilters()" class="btn btn-purple">
+                <i class="fas fa-redo-alt me-2"></i>Reset Filters
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Show loading on form submit
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    document.getElementById('mainContent').style.opacity = '0.5';
+});
+
+// Reset filters function
+function resetFilters() {
+    window.location.href = "{{ url_for('principal.risk_monitoring') }}";
+}
+
+// Filter by risk level
+function filterByRisk(risk) {
+    const select = document.querySelector('select[name="risk"]');
+    select.value = risk;
+    document.getElementById('filterForm').submit();
+}
+
+// Search with debounce
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        document.getElementById('filterForm').submit();
+    }, 500);
+});
+
+// Export to CSV
+function exportToCSV() {
+    const table = document.getElementById('studentTable');
+    const rows = table.querySelectorAll('tr');
+    let csv = [];
+    
+    // Get headers
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(th => {
+        headers.push(th.textContent.trim());
+    });
+    csv.push(headers.join(','));
+    
+    // Get data rows
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip header row
+        const rowData = [];
+        row.querySelectorAll('td').forEach(td => {
+            // Clean the text content
+            let text = td.textContent.trim().replace(/,/g, ';');
+            rowData.push(text);
+        });
+        csv.push(rowData.join(','));
+    });
+    
+    // Download CSV
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'risk_report.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+
+// Highlight active risk pill
+document.addEventListener('DOMContentLoaded', function() {
+    const selectedRisk = "{{ selected_risk }}";
+    if (selectedRisk && selectedRisk !== 'all') {
+        const pills = document.querySelectorAll('.risk-pill');
+        pills.forEach(pill => {
+            if (pill.textContent.includes(selectedRisk)) {
+                pill.classList.add('active');
+            }
+        });
+    }
+    
+    // Hide loading if it was shown
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.opacity = '1';
+});
+
+// Add keyboard shortcut for search (Ctrl+F)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'f') {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+    }
+});
+</script>
+{% endblock %}

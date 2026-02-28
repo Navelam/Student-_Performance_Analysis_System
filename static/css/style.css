@@ -1,0 +1,276 @@
+/* Responsive Design */
+
+/* Large devices (desktops, less than 1200px) */
+@media (max-width: 1199.98px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+    .navbar-brand span {
+        display: none;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .card-header {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .dropdown-menu {
+        width: 100%;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    .navbar-brand i {
+        font-size: 1.5rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .footer {
+        font-size: 0.9rem;
+    }
+    
+    #back-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .footer,
+    .btn,
+    #back-to-top {
+        display: none !important;
+    }
+    
+    body {
+        background: white;
+        padding: 20px;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+/* =====================================================
+   STUDENT PERFORMANCE FEEDBACK STYLES
+   ===================================================== */
+
+/* Risk Badges */
+.risk-critical {
+    background: linear-gradient(135deg, #dc3545, #c82333) !important;
+    color: white !important;
+    animation: pulse 2s infinite;
+}
+
+.risk-average {
+    background: #ffc107 !important;
+    color: #2c3e50 !important;
+}
+
+.risk-safe {
+    background: #28a745 !important;
+    color: white !important;
+}
+
+.risk-best {
+    background: #6f42c1 !important;
+    color: white !important;
+}
+
+/* Feedback Messages */
+.feedback-critical {
+    background: #fff5f5;
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.feedback-average {
+    background: #fff3e0;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.feedback-safe {
+    background: #f0fff4;
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.feedback-best {
+    background: #f3e9ff;
+    color: #6f42c1;
+    border-left: 4px solid #6f42c1;
+}
+
+/* Grade Badges */
+.grade-aplus {
+    background: #6f42c1 !important;
+    color: white !important;
+}
+
+.grade-a {
+    background: #9b59b6 !important;
+    color: white !important;
+}
+
+.grade-b {
+    background: #3498db !important;
+    color: white !important;
+}
+
+.grade-c {
+    background: #f1c40f !important;
+    color: #2c3e50 !important;
+}
+
+.grade-d {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+/* Card Borders */
+.feedback-card.critical {
+    border-left: 8px solid #dc3545;
+    border-top: 1px solid #ffebee;
+    border-right: 1px solid #ffebee;
+    border-bottom: 1px solid #ffebee;
+}
+
+.feedback-card.average {
+    border-left: 8px solid #ffc107;
+    border-top: 1px solid #fff3e0;
+    border-right: 1px solid #fff3e0;
+    border-bottom: 1px solid #fff3e0;
+}
+
+.feedback-card.safe {
+    border-left: 8px solid #28a745;
+    border-top: 1px solid #e8f5e9;
+    border-right: 1px solid #e8f5e9;
+    border-bottom: 1px solid #e8f5e9;
+}
+
+.feedback-card.best {
+    border-left: 8px solid #6f42c1;
+    border-top: 1px solid #f3e9ff;
+    border-right: 1px solid #f3e9ff;
+    border-bottom: 1px solid #f3e9ff;
+}
+
+/* Attendance Fill Colors */
+.fill-critical {
+    background: #dc3545;
+}
+
+.fill-average {
+    background: #ffc107;
+}
+
+.fill-safe {
+    background: #28a745;
+}
+
+.fill-best {
+    background: #6f42c1;
+}
+
+/* Pulse Animation for Critical */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Next Grade Box */
+.next-grade {
+    background: #f3e9ff;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+.next-grade i {
+    color: #6f42c1;
+}
+
+.marks-needed {
+    color: #6f42c1;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+/* Details Summary */
+details summary {
+    color: #6f42c1;
+    font-weight: 600;
+    outline: none;
+}
+
+details summary::-webkit-details-marker {
+    color: #6f42c1;
+}
+
+details[open] summary {
+    margin-bottom: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+}

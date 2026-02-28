@@ -1,0 +1,467 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Student Performance Analysis System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        min-height: calc(100vh - 200px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #f3e9ff 100%);
+    }
+    
+    .login-card {
+        max-width: 500px;
+        width: 100%;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(111, 66, 193, 0.2);
+        overflow: hidden;
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .login-header {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        padding: 40px 30px;
+        text-align: center;
+        color: white;
+    }
+    
+    .login-header i {
+        font-size: 60px;
+        margin-bottom: 15px;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .login-header h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .login-header p {
+        opacity: 0.9;
+        margin: 0;
+    }
+    
+    .login-body {
+        padding: 40px 30px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .form-label i {
+        color: #6f42c1;
+        margin-right: 8px;
+    }
+    
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    
+    .input-icon {
+        position: absolute;
+        left: 15px;
+        color: #6f42c1;
+        z-index: 2;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 14px 15px 14px 45px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(111, 66, 193, 0.1);
+    }
+    
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        color: #6c757d;
+        z-index: 2;
+    }
+    
+    .role-select {
+        width: 100%;
+        padding: 14px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236f42c1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+    }
+    
+    .role-select:focus {
+        border-color: #6f42c1;
+        outline: none;
+    }
+    
+    .role-hint {
+        display: none;
+        font-size: 0.9rem;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    
+    .role-hint.student {
+        background: #e3f2fd;
+        color: #0d47a1;
+        border-left: 4px solid #2196f3;
+    }
+    
+    .role-hint.teacher {
+        background: #fff3e0;
+        color: #e65100;
+        border-left: 4px solid #ff9800;
+    }
+    
+    .role-hint.hod {
+        background: #fff8e1;
+        color: #ff6f00;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .role-hint.coordinator {
+        background: #e8f5e8;
+        color: #1b5e20;
+        border-left: 4px solid #4caf50;
+    }
+    
+    .role-hint.principal {
+        background: #f3e5f5;
+        color: #4a148c;
+        border-left: 4px solid #9c27b0;
+    }
+    
+    .role-hint i {
+        margin-right: 8px;
+    }
+    
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin: 25px 0;
+    }
+    
+    .form-check-input {
+        width: 18px;
+        height: 18px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    
+    .form-check-input:checked {
+        background-color: #6f42c1;
+        border-color: #6f42c1;
+    }
+    
+    .forgot-link {
+        margin-left: auto;
+        color: #6f42c1;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+    
+    .btn-login {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(111, 66, 193, 0.4);
+    }
+    
+    .login-footer {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .info-message {
+        background: #f3e9ff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-left: 5px solid #6f42c1;
+    }
+    
+    .info-message h6 {
+        color: #6f42c1;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .info-item {
+        background: white;
+        border-radius: 8px;
+        padding: 10px;
+    }
+    
+    .info-item p {
+        margin: 5px 0;
+        font-size: 0.9rem;
+    }
+    
+    .info-item i {
+        width: 20px;
+        color: #9b59b6;
+    }
+    
+    @media (max-width: 576px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <i class="fas fa-graduation-cap"></i>
+            <h3>Welcome Back!</h3>
+            <p>Login to access your dashboard</p>
+        </div>
+        
+        <div class="login-body">
+            
+            
+            <!-- SINGLE FORM - FIXED -->
+            <form method="POST" action="{{ url_for('auth.login') }}" id="loginForm">
+                <!-- CSRF Token - FIXED: using csrf_token() function -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <!-- Role Dropdown -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user-tag"></i> Select Your Role
+                    </label>
+                    <select class="role-select" id="role" name="role" required>
+                        <option value="" selected disabled>-- Choose your role --</option>
+                        {% for role in roles %}
+                            <option value="{{ role.value }}" {% if request.args.get('role') == role.value %}selected{% endif %}>
+                                {{ role.label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <!-- Role hints -->
+                    <div id="studentHint" class="role-hint student">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Student:</strong> student | Password: 123
+                    </div>
+                    <div id="teacherHint" class="role-hint teacher">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Teacher:</strong> teacher | Password: 123
+                    </div>
+                    <div id="hodHint" class="role-hint hod">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>HOD:</strong> hod | Password: 123
+                    </div>
+                    <div id="coordinatorHint" class="role-hint coordinator">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Coordinator:</strong> coordinator | Password: 123
+                    </div>
+                    <div id="principalHint" class="role-hint principal">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Principal:</strong> principal | Password: 123
+                    </div>
+                </div>
+                
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" 
+                               placeholder="Enter your username" required>
+                    </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               placeholder="Enter your password" required>
+                        <span class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Remember Me -->
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">Remember me</label>
+                    <a href="{{ url_for('auth.forgot_password') }}" class="forgot-link">
+                        <i class="fas fa-question-circle"></i> Forgot Password?
+                    </a>
+                </div>
+                
+                <!-- Login Button -->
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+            </form>
+            
+           
+            
+            <div class="login-footer">
+                <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Toggle password visibility
+    $('#togglePassword').click(function() {
+        const password = $('#password');
+        const type = password.attr('type') === 'password' ? 'text' : 'password';
+        password.attr('type', type);
+        $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+    });
+    
+    // Role hints
+    function showRoleHint(role) {
+        $('.role-hint').hide();
+        if (role === 'student') $('#studentHint').fadeIn(300);
+        else if (role === 'teacher') $('#teacherHint').fadeIn(300);
+        else if (role === 'hod') $('#hodHint').fadeIn(300);
+        else if (role === 'coordinator') $('#coordinatorHint').fadeIn(300);
+        else if (role === 'principal') $('#principalHint').fadeIn(300);
+    }
+    
+    // Auto-fill demo credentials
+    function fillDemoCredentials(role) {
+        if (role === 'student') {
+            $('#username').val('student');
+            $('#password').val('123');
+        } else if (role === 'teacher') {
+            $('#username').val('teacher');
+            $('#password').val('123');
+        } else if (role === 'hod') {
+            $('#username').val('hod');
+            $('#password').val('123');
+        } else if (role === 'coordinator') {
+            $('#username').val('coordinator');
+            $('#password').val('123');
+        } else if (role === 'principal') {
+            $('#username').val('principal');
+            $('#password').val('123');
+        }
+    }
+    
+    // Check URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedRole = urlParams.get('role');
+    if (selectedRole) {
+        $('#role').val(selectedRole);
+        showRoleHint(selectedRole);
+        fillDemoCredentials(selectedRole);
+    }
+    
+    // Role change
+    $('#role').change(function() {
+        const role = $(this).val();
+        showRoleHint(role);
+        fillDemoCredentials(role);
+    });
+    
+    // Form validation
+    $('#loginForm').submit(function(e) {
+        const role = $('#role').val();
+        const username = $('#username').val().trim();
+        const password = $('#password').val().trim();
+        
+        if (!role) {
+            e.preventDefault();
+            alert('Please select your role');
+            return false;
+        }
+        
+        if (!username || !password) {
+            e.preventDefault();
+            alert('Please enter username and password');
+            return false;
+        }
+        
+        $('#loginBtn').html('<i class="fas fa-spinner fa-spin"></i> Logging in...').prop('disabled', true);
+    });
+});
+</script>
+{% endblock %}

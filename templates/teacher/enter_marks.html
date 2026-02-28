@@ -1,0 +1,307 @@
+{% extends "teacher/base_teacher.html" %}
+
+{% block title %}Enter Marks{% endblock %}
+
+{% block header_title %}Enter Marks{% endblock %}
+{% block header_subtitle %}{{ subject_code }} - Semester {{ semester }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .entry-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+    
+    .student-selector {
+        background: #f3e9ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .marks-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .form-label i {
+        color: #6f42c1;
+        width: 20px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111,66,193,0.1);
+    }
+    
+    .preview-card {
+        background: #f3e9ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .preview-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #6f42c1;
+    }
+    
+    .btn-save {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111,66,193,0.3);
+    }
+    
+    .grade-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .grade-aplus { background: #6f42c1; color: white; }
+    .grade-a { background: #9b59b6; color: white; }
+    .grade-b { background: #3498db; color: white; }
+    .grade-c { background: #f1c40f; color: #2c3e50; }
+    .grade-d { background: #e74c3c; color: white; }
+    
+    .risk-critical { background: #dc3545; color: white; }
+    .risk-average { background: #ffc107; color: #2c3e50; }
+    .risk-safe { background: #28a745; color: white; }
+    .risk-best { background: #6f42c1; color: white; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="entry-container">
+    <div class="form-card">
+        <h4 class="mb-4"><i class="fas fa-pencil-alt me-2 text-purple"></i>Enter Marks</h4>
+        
+        <form method="POST" id="marksForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <!-- Student Selection -->
+            <div class="student-selector">
+                <label class="form-label"><i class="fas fa-user-graduate"></i> Select Student *</label>
+                <select name="registration" class="form-select" required id="studentSelect">
+                    <option value="">-- Choose student --</option>
+                    {% for student in students %}
+                    <option value="{{ student.registration }}" 
+                            data-attendance="{{ student.attendance }}"
+                            data-i1="{{ student.internal1 }}"
+                            data-i2="{{ student.internal2 }}"
+                            data-sem="{{ student.seminar }}"
+                            data-assess="{{ student.assessment }}">
+                        {{ student.name }} ({{ student.registration }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Marks Grid -->
+            <div class="marks-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-chart-line"></i> Internal 1 (0-70)</label>
+                    <input type="number" name="internal1" id="internal1" class="form-control" 
+                           min="0" max="70" step="1" required oninput="calculateMarks()">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-chart-line"></i> Internal 2 (0-70)</label>
+                    <input type="number" name="internal2" id="internal2" class="form-control" 
+                           min="0" max="70" step="1" required oninput="calculateMarks()">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-microphone"></i> Seminar (0-10)</label>
+                    <input type="number" name="seminar" id="seminar" class="form-control" 
+                           min="0" max="10" step="1" required oninput="calculateMarks()">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-tasks"></i> Assessment (0-10)</label>
+                    <input type="number" name="assessment" id="assessment" class="form-control" 
+                           min="0" max="10" step="1" required oninput="calculateMarks()">
+                </div>
+            </div>
+            
+            <!-- Attendance -->
+            <div class="form-group">
+                <label><i class="fas fa-calendar-check"></i> Attendance %</label>
+                <input type="number" name="attendance" id="attendance" class="form-control" 
+                       min="0" max="100" step="1" value="75" required oninput="calculateMarks()">
+            </div>
+            
+            <!-- Live Preview -->
+            <div class="preview-card">
+                <h6 class="text-purple mb-3"><i class="fas fa-sync-alt me-2"></i>Live Preview</h6>
+                <div class="preview-grid">
+                    <div>
+                        <div class="preview-label">Total/160</div>
+                        <div class="preview-value" id="previewTotal">0</div>
+                    </div>
+                    <div>
+                        <div class="preview-label">Final/20</div>
+                        <div class="preview-value" id="previewFinal">0</div>
+                    </div>
+                    <div>
+                        <div class="preview-label">Grade</div>
+                        <div id="previewGrade">-</div>
+                    </div>
+                    <div>
+                        <div class="preview-label">Risk</div>
+                        <div id="previewRisk">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-save" onclick="return validateForm()">
+                <i class="fas fa-save me-2"></i>Save Marks to CSV
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Grade and risk classes
+const gradeClasses = {
+    'A+': 'grade-aplus',
+    'A': 'grade-a',
+    'B': 'grade-b',
+    'C': 'grade-c',
+    'D': 'grade-d'
+};
+
+const riskClasses = {
+    'Critical': 'risk-critical',
+    'Average': 'risk-average',
+    'Safe': 'risk-safe',
+    'Best': 'risk-best'
+};
+
+function calculateMarks() {
+    let i1 = parseInt(document.getElementById('internal1').value) || 0;
+    let i2 = parseInt(document.getElementById('internal2').value) || 0;
+    let sem = parseInt(document.getElementById('seminar').value) || 0;
+    let assess = parseInt(document.getElementById('assessment').value) || 0;
+    let attendance = parseInt(document.getElementById('attendance').value) || 0;
+    
+    let total = i1 + i2 + sem + assess;
+    let final = (total / 160 * 20).toFixed(1);
+    
+    document.getElementById('previewTotal').textContent = total;
+    document.getElementById('previewFinal').textContent = final;
+    
+    // Calculate grade
+    let grade = '';
+    if (final >= 18) grade = 'A+';
+    else if (final >= 15) grade = 'A';
+    else if (final >= 12) grade = 'B';
+    else if (final >= 10) grade = 'C';
+    else grade = 'D';
+    
+    document.getElementById('previewGrade').innerHTML = 
+        `<span class="grade-badge ${gradeClasses[grade]}">${grade}</span>`;
+    
+    // Calculate risk
+    let risk = '';
+    if (attendance < 70 || final < 10) risk = 'Critical';
+    else if (final < 15) risk = 'Average';
+    else if (final >= 18) risk = 'Best';
+    else risk = 'Safe';
+    
+    document.getElementById('previewRisk').innerHTML = 
+        `<span class="grade-badge ${riskClasses[risk]}">${risk}</span>`;
+}
+
+function validateForm() {
+    let student = document.getElementById('studentSelect').value;
+    if (!student) {
+        alert('Please select a student');
+        return false;
+    }
+    
+    let i1 = parseInt(document.getElementById('internal1').value) || 0;
+    let i2 = parseInt(document.getElementById('internal2').value) || 0;
+    let sem = parseInt(document.getElementById('seminar').value) || 0;
+    let assess = parseInt(document.getElementById('assessment').value) || 0;
+    
+    if (i1 < 0 || i1 > 70 || i2 < 0 || i2 > 70) {
+        alert('Internal marks must be between 0 and 70');
+        return false;
+    }
+    
+    if (sem < 0 || sem > 10 || assess < 0 || assess > 10) {
+        alert('Seminar and Assessment must be between 0 and 10');
+        return false;
+    }
+    
+    return confirm('Save these marks to CSV?');
+}
+
+// Load student data when selected
+document.getElementById('studentSelect').addEventListener('change', function() {
+    let option = this.options[this.selectedIndex];
+    if (option.value) {
+        document.getElementById('internal1').value = option.dataset.i1 || 0;
+        document.getElementById('internal2').value = option.dataset.i2 || 0;
+        document.getElementById('seminar').value = option.dataset.sem || 0;
+        document.getElementById('assessment').value = option.dataset.assess || 0;
+        document.getElementById('attendance').value = option.dataset.attendance || 75;
+        calculateMarks();
+    }
+});
+
+// Initialize calculation
+calculateMarks();
+</script>
+{% endblock %}

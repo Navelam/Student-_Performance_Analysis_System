@@ -1,0 +1,402 @@
+{% extends "coordinator/base_coordinator.html" %}
+
+{% block title %}Create Notification - Coordinator{% endblock %}
+
+{% block header_title %}Create Notification{% endblock %}
+{% block header_subtitle %}Send announcements to students, teachers, or public{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-header {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f3e9ff;
+    }
+    
+    .form-header h4 {
+        color: #6f42c1;
+        font-weight: 600;
+    }
+    
+    .form-header i {
+        margin-right: 10px;
+        color: #9b59b6;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .form-label i {
+        color: #6f42c1;
+        width: 20px;
+        margin-right: 5px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+    }
+    
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    
+    .col-md-6 {
+        width: 50%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    
+    .preview-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 25px 0;
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .preview-title {
+        color: #6f42c1;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .notification-preview {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .preview-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+    
+    .preview-icon.fee { background: #dc3545; }
+    .preview-icon.meeting { background: #fd7e14; }
+    .preview-icon.event { background: #6f42c1; }
+    .preview-icon.result { background: #28a745; }
+    .preview-icon.timetable { background: #17a2b8; }
+    .preview-icon.holiday { background: #20c997; }
+    .preview-icon.emergency { background: #dc3545; }
+    .preview-icon.general { background: #6f42c1; }
+    
+    .preview-content {
+        flex: 1;
+    }
+    
+    .preview-content h6 {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+    
+    .preview-content p {
+        color: #6c757d;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    
+    .preview-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 0.8rem;
+        color: #adb5bd;
+    }
+    
+    .preview-meta i {
+        margin-right: 3px;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 100%;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(111, 66, 193, 0.4);
+    }
+    
+    .btn-submit i {
+        margin-right: 8px;
+    }
+    
+    .info-box {
+        background: #f3e9ff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .info-box i {
+        color: #6f42c1;
+        margin-right: 8px;
+    }
+    
+    @media (max-width: 768px) {
+        .col-md-6 {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h4><i class="fas fa-bullhorn"></i> Create New Notification</h4>
+            <p class="text-muted mb-0">Send announcements to students, teachers, or the public</p>
+        </div>
+        
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i>
+            <strong>Auto Prefix:</strong> Based on notification type, a prefix will be automatically added to the message.
+        </div>
+        
+        <form method="POST" action="{{ url_for('coordinator.create_notification') }}" id="notificationForm">
+            <!-- CRITICAL: CSRF Token must be here -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-tag"></i> Notification Type *</label>
+                        <select name="notification_type" id="notificationType" class="form-select" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="fee">💰 Fee Reminder</option>
+                            <option value="meeting">👥 Parents Meeting</option>
+                            <option value="event">🎉 College Event</option>
+                            <option value="result">📊 Exam Results</option>
+                            <option value="timetable">📅 Exam Timetable</option>
+                            <option value="holiday">🏖️ Holiday</option>
+                            <option value="emergency">🚨 Emergency</option>
+                            <option value="general">📢 General Announcement</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-users"></i> Target Audience *</label>
+                        <select name="target_role" id="targetAudience" class="form-select" required>
+                            <option value="">-- Select Audience --</option>
+                            <option value="all">👥 Everyone (Public)</option>
+                            <option value="students">🎓 All Students</option>
+                            <option value="teachers">👨‍🏫 All Teachers</option>
+                            <option value="public">🌍 Public Only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-heading"></i> Title *</label>
+                <input type="text" name="title" id="title" class="form-control" 
+                       placeholder="Enter notification title" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-align-left"></i> Message *</label>
+                <textarea name="message" id="message" class="form-control" rows="4" 
+                          placeholder="Enter your message here..." required></textarea>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar-alt"></i> Start Date *</label>
+                        <input type="date" name="start_date" id="startDate" class="form-control" 
+                               value="{{ today }}" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar-check"></i> End Date *</label>
+                        <input type="date" name="end_date" id="endDate" class="form-control" 
+                               value="{{ today }}" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Preview -->
+            <div class="preview-card">
+                <div class="preview-title">
+                    <i class="fas fa-eye"></i> Live Preview
+                </div>
+                <div class="notification-preview" id="previewBox">
+                    <div class="preview-icon general" id="previewIcon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="preview-content">
+                        <h6 id="previewTitle">Announcement: Notification Title</h6>
+                        <p id="previewMessage">Your message with automatic prefix will appear here</p>
+                        <div class="preview-meta">
+                            <span><i class="far fa-calendar-alt"></i> <span id="previewStart">{{ today }}</span></span>
+                            <span><i class="far fa-calendar-check"></i> <span id="previewEnd">{{ today }}</span></span>
+                            <span><i class="fas fa-users"></i> <span id="previewTarget">Everyone</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Create Notification
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Auto-prefix mapping
+const prefixes = {
+    'fee': '🔴 FEE REMINDER: ',
+    'meeting': '📅 PARENTS MEETING: ',
+    'event': '🎉 COLLEGE EVENT: ',
+    'result': '📊 EXAM RESULTS: ',
+    'timetable': '📅 TIMETABLE: ',
+    'holiday': '🏖️ HOLIDAY: ',
+    'emergency': '🚨 EMERGENCY: ',
+    'general': '📢 ANNOUNCEMENT: '
+};
+
+const titlePrefixes = {
+    'fee': 'Fee Reminder',
+    'meeting': 'Parents Meeting',
+    'event': 'College Event',
+    'result': 'Results Published',
+    'timetable': 'Exam Timetable',
+    'holiday': 'Holiday',
+    'emergency': 'Emergency Alert',
+    'general': 'Announcement'
+};
+
+const icons = {
+    'fee': { class: 'fee', icon: 'fa-indian-rupee-sign' },
+    'meeting': { class: 'meeting', icon: 'fa-people-group' },
+    'event': { class: 'event', icon: 'fa-calendar-check' },
+    'result': { class: 'result', icon: 'fa-chart-simple' },
+    'timetable': { class: 'timetable', icon: 'fa-calendar-days' },
+    'holiday': { class: 'holiday', icon: 'fa-umbrella-beach' },
+    'emergency': { class: 'emergency', icon: 'fa-exclamation-triangle' },
+    'general': { class: 'general', icon: 'fa-bullhorn' }
+};
+
+const targetLabels = {
+    'all': 'Everyone',
+    'students': 'Students Only',
+    'teachers': 'Teachers Only',
+    'public': 'Public Only'
+};
+
+function updatePreview() {
+    const type = document.getElementById('notificationType').value;
+    const target = document.getElementById('targetAudience').value;
+    const title = document.getElementById('title').value || 'Notification Title';
+    const message = document.getElementById('message').value || 'Your message here';
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    
+    // Update preview icon
+    const previewIcon = document.getElementById('previewIcon');
+    if (type && icons[type]) {
+        previewIcon.className = 'preview-icon ' + icons[type].class;
+        previewIcon.innerHTML = `<i class="fas ${icons[type].icon}"></i>`;
+    } else {
+        previewIcon.className = 'preview-icon general';
+        previewIcon.innerHTML = '<i class="fas fa-bullhorn"></i>';
+    }
+    
+    // Update preview title
+    let titlePrefix = type ? (titlePrefixes[type] || 'Announcement') : 'Announcement';
+    document.getElementById('previewTitle').textContent = titlePrefix + ': ' + title;
+    
+    // Update preview message with prefix
+    let messagePrefix = type ? (prefixes[type] || '') : '';
+    document.getElementById('previewMessage').textContent = messagePrefix + message;
+    
+    // Update dates
+    document.getElementById('previewStart').textContent = startDate ? formatDate(startDate) : 'Not set';
+    document.getElementById('previewEnd').textContent = endDate ? formatDate(endDate) : 'Not set';
+    
+    // Update target
+    document.getElementById('previewTarget').textContent = target ? (targetLabels[target] || 'Everyone') : 'Everyone';
+}
+
+function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+}
+
+// Form validation
+document.getElementById('notificationForm').addEventListener('submit', function(e) {
+    const startDate = new Date(document.getElementById('startDate').value);
+    const endDate = new Date(document.getElementById('endDate').value);
+    
+    if (endDate < startDate) {
+        e.preventDefault();
+        alert('Error: End date must be after start date');
+    }
+});
+
+// Initialize preview
+updatePreview();
+</script>
+{% endblock %}

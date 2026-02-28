@@ -1,0 +1,264 @@
+{% extends "teacher/base_teacher.html" %}
+
+{% block title %}Attendance - {{ subject.name }}{% endblock %}
+
+{% block header_title %}Attendance Entry{% endblock %}
+{% block header_subtitle %}{{ subject.name }} ({{ subject.code }}) - Semester {{ subject.semester }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .penalty-info {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .penalty-table {
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    .penalty-table td {
+        padding: 5px;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    
+    .penalty-amount {
+        font-weight: 700;
+        color: #dc3545;
+    }
+    
+    .student-row {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .student-info {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .student-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+    
+    .student-reg {
+        color: #6f42c1;
+        font-size: 0.9rem;
+        margin-left: 10px;
+    }
+    
+    .attendance-input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .attendance-input:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+    }
+    
+    .percentage-display {
+        background: #f3e9ff;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .percentage-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #6f42c1;
+    }
+    
+    .penalty-display {
+        background: #fff5f5;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .penalty-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #dc3545;
+    }
+    
+    .month-selector {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .save-btn {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+    }
+    
+    .save-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Penalty Information -->
+    <div class="penalty-info">
+        <h6 class="mb-2"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Attendance Penalty Rules</h6>
+        <table class="penalty-table">
+            <tr>
+                <td>≥75%</td>
+                <td class="text-success">No Penalty</td>
+            </tr>
+            <tr>
+                <td>70% - 74%</td>
+                <td class="penalty-amount">₹200</td>
+            </tr>
+            <tr>
+                <td>60% - 69%</td>
+                <td class="penalty-amount">₹500</td>
+            </tr>
+            <tr>
+                <td>&lt;60%</td>
+                <td class="penalty-amount">₹1000</td>
+            </tr>
+        </table>
+    </div>
+    
+    <form method="POST">
+        <!-- Month/Year Selector -->
+        <div class="month-selector row">
+            <div class="col-md-4">
+                <label class="fw-bold text-purple">Month</label>
+                <select name="month" class="form-select">
+                    {% for month in months %}
+                    <option value="{{ month.number }}" {% if month.number == current_month %}selected{% endif %}>
+                        {{ month.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="fw-bold text-purple">Year</label>
+                <input type="number" name="year" class="form-control" value="{{ current_year }}" readonly>
+            </div>
+        </div>
+        
+        <!-- Student Rows -->
+        {% for student in students %}
+        {% set att = attendance_dict.get(student.id) %}
+        <div class="student-row" id="student-row-{{ student.id }}">
+            <div class="student-info">
+                <span class="student-name">{{ student.name }}</span>
+                <span class="student-reg">{{ student.registration_number }}</span>
+                <input type="hidden" name="student_id[]" value="{{ student.id }}">
+            </div>
+            
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label>Total Classes</label>
+                    <input type="number" name="total_classes[]" class="attendance-input" 
+                           value="{{ att.total_classes if att else 20 }}" min="1" step="1" required
+                           onchange="calculateRow(this)">
+                </div>
+                
+                <div class="col-md-3">
+                    <label>Attended Classes</label>
+                    <input type="number" name="attended_classes[]" class="attendance-input" 
+                           value="{{ att.attended_classes if att else 0 }}" min="0" step="1" required
+                           onchange="calculateRow(this)">
+                </div>
+                
+                <div class="col-md-2">
+                    <label>Attendance %</label>
+                    <div class="percentage-display" id="percent-{{ student.id }}">
+                        <span class="percentage-value">{{ att.attendance_percentage if att else 0 }}</span>%
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <label>Penalty</label>
+                    <div class="penalty-display" id="penalty-{{ student.id }}">
+                        <span class="penalty-value">₹{{ att.penalty_amount if att else 0 }}</span>
+                        <span class="text-muted">({{ att.penalty_status if att else 'No Penalty' }})</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <!-- Form Actions -->
+        <div class="text-center mt-4">
+            <button type="submit" class="save-btn">
+                <i class="fas fa-save me-2"></i>Save Attendance
+            </button>
+            <a href="{{ url_for('teacher.attendance_report', subject_id=subject.id) }}" 
+               class="btn btn-outline-purple ms-3">
+                <i class="fas fa-chart-line me-2"></i>View Report
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function calculatePenalty(percentage) {
+    if (percentage >= 75) return { amount: 0, status: 'No Penalty' };
+    if (percentage >= 70) return { amount: 200, status: 'Low Penalty' };
+    if (percentage >= 60) return { amount: 500, status: 'Medium Penalty' };
+    return { amount: 1000, status: 'High Penalty' };
+}
+
+function calculateRow(element) {
+    let row = element.closest('.student-row');
+    let studentId = row.id.split('-')[2];
+    
+    let total = parseInt(row.querySelector('input[name="total_classes[]"]').value) || 0;
+    let attended = parseInt(row.querySelector('input[name="attended_classes[]"]').value) || 0;
+    
+    if (attended > total) {
+        row.querySelector('input[name="attended_classes[]"]').classList.add('error');
+        return;
+    } else {
+        row.querySelector('input[name="attended_classes[]"]').classList.remove('error');
+    }
+    
+    let percentage = total > 0 ? Math.round((attended / total) * 100) : 0;
+    document.querySelector(`#percent-${studentId} .percentage-value`).textContent = percentage;
+    
+    let penalty = calculatePenalty(percentage);
+    document.querySelector(`#penalty-${studentId} .penalty-value`).textContent = `₹${penalty.amount}`;
+    
+    let statusSpan = document.querySelector(`#penalty-${studentId} .text-muted`);
+    if (statusSpan) statusSpan.textContent = `(${penalty.status})`;
+}
+
+document.querySelectorAll('.attendance-input').forEach(input => {
+    input.addEventListener('change', function() { calculateRow(this); });
+});
+</script>
+{% endblock %}

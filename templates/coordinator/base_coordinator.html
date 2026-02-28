@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Coordinator - SPAS{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <!-- Datepicker -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    
+    <style>
+        :root {
+            --purple-primary: #6f42c1;
+            --purple-light: #9b59b6;
+            --purple-soft: #f3e9ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(135deg, #6f42c1, #9b59b6);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .sidebar-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2rem;
+            font-weight: 600;
+            border: 3px solid white;
+        }
+        
+        .sidebar-header h4 {
+            margin: 10px 0 5px;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-header p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu-item {
+            list-style: none;
+        }
+        
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: #2c3e50;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu-link:hover {
+            background: #f3e9ff;
+            border-left-color: #6f42c1;
+            color: #6f42c1;
+        }
+        
+        .sidebar-menu-link.active {
+            background: #f3e9ff;
+            border-left-color: #6f42c1;
+            color: #6f42c1;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu-link i {
+            width: 25px;
+            margin-right: 10px;
+            color: #6f42c1;
+        }
+        
+        .sidebar-menu-link.logout {
+            margin-top: 20px;
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+        }
+        
+        .sidebar-menu-link.logout i {
+            color: #dc3545;
+        }
+
+        /* Setup status indicator */
+        .setup-badge {
+            margin-left: auto;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #ffc107;
+            color: #2c3e50;
+        }
+        
+        .setup-badge.success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+        
+        .top-header {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .header-title h2 {
+            color: #6f42c1;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .header-title p {
+            margin: 5px 0 0;
+            color: #6c757d;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6f42c1, #9b59b6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.02);
+        }
+        
+        .bg-purple {
+            background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        }
+        
+        .btn-purple {
+            background: linear-gradient(135deg, #6f42c1, #9b59b6);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-purple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(111,66,193,0.3);
+        }
+        
+        .btn-outline-purple {
+            border: 2px solid #6f42c1;
+            color: #6f42c1;
+            background: transparent;
+            padding: 8px 18px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline-purple:hover {
+            background: #6f42c1;
+            color: white;
+        }
+        
+        /* Room cards */
+        .room-card {
+            transition: transform 0.2s;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .seat-layout {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+        }
+        .seat {
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 5px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .seat.occupied {
+            background-color: #f3e9ff;
+            border-color: #6f42c1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-avatar">
+                {{ current_user.full_name[0] }}
+            </div>
+            <h4>{{ current_user.full_name }}</h4>
+            <p>@{{ current_user.username }}</p>
+            <span class="badge bg-light text-purple mt-2">Exam Coordinator</span>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.dashboard') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            
+            <!-- NEW: Academic Setup Link -->
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.run_initial_setup') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.run_initial_setup' %}active{% endif %}"
+                   onclick="return confirm('This will create all departments, semesters and subjects. Continue?')">
+                    <i class="fas fa-cogs"></i> Academic Setup
+                    <span class="setup-badge">Required</span>
+                </a>
+            </li>
+            
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.create_timetable') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.create_timetable' %}active{% endif %}">
+                    <i class="fas fa-plus-circle"></i> Create Timetable
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.timetable_view') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.timetable_view' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> View Timetable
+                </a>
+            </li>
+            
+            <!-- Room Allocation Menu Items -->
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.room_allocation_dashboard') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.room_allocation_dashboard' %}active{% endif %}">
+                    <i class="fas fa-door-open"></i> Room Dashboard
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.allocate_rooms') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.allocate_rooms' %}active{% endif %}">
+                    <i class="fas fa-magic"></i> Allocate Rooms
+                </a>
+            </li>
+     
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.invigilator_allocation') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.invigilator_allocation' %}active{% endif %}">
+                    <i class="fas fa-user-tie"></i> Invigilators
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.view_all_invigilators') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.view_all_invigilators' %}active{% endif %}">
+                    <i class="fas fa-clipboard-list"></i> All Invigilators
+                </a>
+            </li>
+            
+            <!-- Notifications Link -->
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.notifications_dashboard') }}" 
+                   class="sidebar-menu-link {% if request.endpoint == 'coordinator.notifications_dashboard' or request.endpoint == 'coordinator.create_notification' or request.endpoint == 'coordinator.edit_notification' %}active{% endif %}">
+                    <i class="fas fa-bell"></i> Notifications
+                </a>
+            </li>
+            
+            <!-- Quick Fix Link (Temporary) -->
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.quick_fix') }}" 
+                   class="sidebar-menu-link">
+                    <i class="fas fa-wrench"></i> Quick Fix
+                </a>
+            </li>
+            
+            <!-- Database Status Link -->
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('coordinator.db_status') }}" 
+                   class="sidebar-menu-link">
+                    <i class="fas fa-database"></i> DB Status
+                </a>
+            </li>
+
+            <li class="sidebar-menu-item">
+                <a href="{{ url_for('auth.logout') }}" class="sidebar-menu-link logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-header">
+            <div class="header-title">
+                <h2>{% block header_title %}Coordinator Dashboard{% endblock %}</h2>
+                <p>{% block header_subtitle %}Manage exam timetables and room allocation{% endblock %}</p>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <h6 class="mb-0">{{ current_user.full_name }}</h6>
+                    <small class="text-muted">{{ now.strftime('%d %B, %Y') }}</small>
+                </div>
+                <div class="user-avatar">
+                    {{ current_user.full_name[0] }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Content -->
+        <div class="content-area">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('.datatable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search..."
+                }
+            });
+            
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: new Date(),
+                autoclose: true,
+                todayHighlight: true
+            });
+            
+            // Check if setup is needed (optional)
+            $.ajax({
+                url: '/coordinator/check-setup-status',
+                method: 'GET',
+                success: function(data) {
+                    if (data.needs_setup) {
+                        $('.setup-badge').show();
+                    } else {
+                        $('.setup-badge').removeClass('setup-badge').addClass('setup-badge success').text('Done');
+                    }
+                }
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

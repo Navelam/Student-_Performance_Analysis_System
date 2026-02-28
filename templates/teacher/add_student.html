@@ -1,0 +1,187 @@
+{% extends "teacher/base_teacher.html" %}
+
+{% block title %}Add New Student{% endblock %}
+
+{% block header_title %}Add New Student{% endblock %}
+{% block header_subtitle %}Add a student to {{ department }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+    
+    .form-title {
+        color: #6f42c1;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f3e9ff;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    .form-label i {
+        color: #6f42c1;
+        width: 20px;
+        margin-right: 5px;
+    }
+    
+    .form-control, .form-select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #6f42c1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(111,66,193,0.1);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #6f42c1, #9b59b6);
+        color: white;
+        border: none;
+        padding: 14px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(111,66,193,0.3);
+    }
+    
+    .info-box {
+        background: #f3e9ff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .preview-id {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 1.1rem;
+        color: #6f42c1;
+        border: 1px dashed #6f42c1;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h4 class="form-title"><i class="fas fa-user-plus me-2"></i>Student Information</h4>
+        
+        <form method="POST" id="addStudentForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-user"></i> Full Name *</label>
+                <input type="text" name="name" class="form-control" placeholder="Enter student name" required>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar"></i> Batch Year *</label>
+                        <select name="batch_year" class="form-select" required id="batchYear">
+                            <option value="">Select Year</option>
+                            {% for year in range(current_year-4, current_year+1) %}
+                            <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-layer-group"></i> Semester *</label>
+                        <select name="semester" class="form-select" required id="semester">
+                            <option value="">Select Semester</option>
+                            {% for i in range(1, 9) %}
+                            <option value="{{ i }}">Semester {{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-qrcode"></i> Registration Number</label>
+                <div class="preview-id" id="regPreview">Will be auto-generated</div>
+                <input type="hidden" name="registration_number" id="registration_number">
+                <small class="text-muted">Auto-generated from department, batch and sequence</small>
+            </div>
+            
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Note:</strong> Student will be added to the CSV file for the selected semester.
+                You can then enter marks for this student.
+            </div>
+            
+            <button type="submit" class="btn-submit" onclick="return confirm('Add this student?')">
+                <i class="fas fa-save me-2"></i>Add Student to CSV
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.getElementById('batchYear').addEventListener('change', generateRegistration);
+document.getElementById('semester').addEventListener('change', generateRegistration);
+
+function generateRegistration() {
+    let batch = document.getElementById('batchYear').value;
+    let semester = document.getElementById('semester').value;
+    
+    if (batch && semester) {
+        // Get department code from template
+        let dept = "{{ department }}";
+        let deptCode = {
+            "Computer Science": "CS",
+            "Computer Applications": "CA",
+            "Commerce Finance": "CF",
+            "Commerce Co-op": "CC",
+            "English": "EN",
+            "Economics": "EC",
+            "History": "HY"
+        }[dept] || "XX";
+        
+        // Generate random sequence
+        let seq = Math.floor(Math.random() * 900) + 100;
+        let regNumber = `${deptCode}${batch}${seq}`;
+        
+        document.getElementById('regPreview').textContent = regNumber;
+        document.getElementById('registration_number').value = regNumber;
+    }
+}
+</script>
+{% endblock %}

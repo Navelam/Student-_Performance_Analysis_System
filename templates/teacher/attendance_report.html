@@ -1,0 +1,185 @@
+{% extends "teacher/base_teacher.html" %}
+
+{% block title %}Attendance Report - {{ subject.name }}{% endblock %}
+
+{% block header_title %}Attendance Report{% endblock %}
+{% block header_subtitle %}{{ subject.name }} ({{ subject.code }}){% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #e9ecef;
+        text-align: center;
+    }
+    
+    .stats-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #6f42c1;
+    }
+    
+    .ml-analysis {
+        background: #f3e9ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .risk-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    
+    .risk-safe { background: #28a745; }
+    .risk-moderate { background: #ffc107; }
+    .risk-high { background: #fd7e14; }
+    .risk-critical { background: #dc3545; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Month Selector -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <select class="form-select" id="monthSelect" onchange="changeMonth()">
+            {% for month in months %}
+            <option value="{{ month.number }}" {% if month.number == current_month %}selected{% endif %}>
+                {{ month.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <input type="number" class="form-control" id="yearInput" value="{{ current_year }}" readonly>
+    </div>
+</div>
+
+<!-- ML Analysis -->
+<div class="ml-analysis">
+    <h6 class="text-purple mb-3"><i class="fas fa-robot me-2"></i>ML Attendance Analysis</h6>
+    <div class="row">
+        <div class="col-md-3">
+            <small class="text-muted">Average Attendance</small>
+            <h5>{{ ml_analysis.average }}%</h5>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted">Safe Students</small>
+            <h5>{{ ml_analysis.safe_count }}</h5>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted">At Risk</small>
+            <h5 class="text-warning">{{ ml_analysis.moderate_count + ml_analysis.high_risk_count + ml_analysis.critical_count }}</h5>
+        </div>
+        <div class="col-md-3">
+            <small class="text-muted">Risk %</small>
+            <h5>{{ ml_analysis.risk_percent }}%</h5>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Table -->
+<div class="table-responsive">
+    <table class="table datatable">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Reg No</th>
+                <th>Name</th>
+                <th>Total</th>
+                <th>Attended</th>
+                <th>Attendance %</th>
+                <th>Penalty</th>
+                <th>Risk</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in display_data %}
+            <tr>
+                <td>{{ item.student.student_id }}</td>
+                <td>{{ item.student.registration_number }}</td>
+                <td>{{ item.student.name }}</td>
+                
+                {% if item.attendance %}
+                    <td>{{ item.attendance.total_classes }}</td>
+                    <td>{{ item.attendance.attended_classes }}</td>
+                    <td>
+                        <strong>{{ item.attendance.attendance_percentage }}%</strong>
+                        {% if item.attendance.attendance_percentage < 70 %}
+                            <span class="risk-indicator risk-critical"></span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-danger">₹{{ item.attendance.penalty_amount }}</span>
+                        <br><small>{{ item.attendance.penalty_status }}</small>
+                    </td>
+                    <td>
+                        {% set risk = 'Critical' if item.attendance.attendance_percentage < 70 else 'Moderate' if item.attendance.attendance_percentage < 75 else 'Safe' %}
+                        <span class="badge {% if risk == 'Critical' %}bg-danger{% elif risk == 'Moderate' %}bg-warning{% else %}bg-success{% endif %}">
+                            {{ risk }}
+                        </span>
+                    </td>
+                {% else %}
+                    <td colspan="3" class="text-muted">No data</td>
+                    <td>-</td>
+                    <td>-</td>
+                {% endif %}
+                
+                <td>
+                    <a href="{{ url_for('teacher.student_detail', student_id=item.student.id) }}" 
+                       class="btn btn-sm btn-outline-purple">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Historical Chart -->
+<div class="card mt-4">
+    <div class="card-header bg-purple text-white">
+        <h5 class="mb-0">Attendance Trend</h5>
+    </div>
+    <div class="card-body">
+        <canvas id="trendChart" height="100"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeMonth() {
+    let month = document.getElementById('monthSelect').value;
+    let year = document.getElementById('yearInput').value;
+    window.location.href = "{{ url_for('teacher.attendance_report', subject_id=subject.id) }}?month=" + month + "&year=" + year;
+}
+
+// Load chart data
+$.get('/teacher/api/attendance-summary/{{ subject.id }}', function(data) {
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Average Attendance %',
+                data: data.averages,
+                borderColor: '#6f42c1',
+                backgroundColor: 'rgba(111, 66, 193, 0.1)',
+                tension: 0.4
+            }]
+        }
+    });
+});
+</script>
+{% endblock %}

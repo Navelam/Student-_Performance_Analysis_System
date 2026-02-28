@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">My Profile</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="profile-pic mb-3">
+                        {% if current_user.profile_pic %}
+                        <img src="{{ current_user.profile_pic }}" class="rounded-circle" width="150" height="150">
+                        {% else %}
+                        <div class="avatar-placeholder rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto" style="width:150px;height:150px;font-size:48px;">
+                            {{ current_user.full_name[0] if current_user.full_name else current_user.username[0] }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h5>{{ current_user.full_name or current_user.username }}</h5>
+                    <p class="text-muted">{{ current_user.role|title }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="150">Username:</th>
+                            <td>{{ current_user.username }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ current_user.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Full Name:</th>
+                            <td>{{ current_user.full_name or 'Not provided' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ current_user.phone or 'Not provided' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Role:</th>
+                            <td>{{ current_user.role|title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Department:</th>
+                            <td>{{ current_user.department.name if current_user.department else 'Not assigned' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Login:</th>
+                            <td>{{ current_user.last_login.strftime('%Y-%m-%d %H:%M') if current_user.last_login else 'Never' }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

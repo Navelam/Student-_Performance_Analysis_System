@@ -1,0 +1,1374 @@
+/* =====================================================
+   PURPLE THEME CSS FOR STUDENT PERFORMANCE ANALYSIS SYSTEM
+   Primary Color: #6f42c1 (Purple)
+   Accent Color: #9b59b6 (Light Purple)
+   Background: White (#ffffff)
+   Text: #2c3e50 (Dark Gray)
+===================================================== */
+
+/* =====================================================
+   CSS VARIABLES
+===================================================== */
+
+:root {
+    /* Primary Purple Shades */
+    --purple-primary: #6f42c1;
+    --purple-light: #9b59b6;
+    --purple-dark: #5a2d9c;
+    --purple-darker: #3c1e6b;
+    --purple-soft: #f3e9ff;
+    --purple-soft-light: #f9f2ff;
+    --purple-soft-dark: #e6d9ff;
+    --purple-gradient: linear-gradient(135deg, #6f42c1, #9b59b6);
+    --purple-gradient-dark: linear-gradient(135deg, #5a2d9c, #6f42c1);
+    --purple-gradient-light: linear-gradient(135deg, #9b59b6, #b07cc6);
+    
+    /* Status Colors */
+    --success: #28a745;
+    --success-light: #d4edda;
+    --danger: #dc3545;
+    --danger-light: #f8d7da;
+    --warning: #ffc107;
+    --warning-light: #fff3cd;
+    --info: #17a2b8;
+    --info-light: #d1ecf1;
+    
+    /* Neutral Colors */
+    --white: #ffffff;
+    --black: #000000;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    
+    /* Text Colors */
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-muted: #95a5a6;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(111, 66, 193, 0.1);
+    --shadow-md: 0 5px 15px rgba(111, 66, 193, 0.15);
+    --shadow-lg: 0 10px 25px rgba(111, 66, 193, 0.2);
+    --shadow-xl: 0 15px 35px rgba(111, 66, 193, 0.25);
+    --shadow-purple: 0 5px 20px rgba(111, 66, 193, 0.3);
+    
+    /* Borders */
+    --border-radius-sm: 5px;
+    --border-radius-md: 10px;
+    --border-radius-lg: 15px;
+    --border-radius-xl: 20px;
+    --border-radius-circle: 50%;
+    
+    /* Transitions */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    --transition-slow: 0.5s;
+}
+
+/* =====================================================
+   BACKGROUND COLORS
+===================================================== */
+
+/* Solid Purple Backgrounds */
+.bg-purple {
+    background: var(--purple-primary) !important;
+}
+
+.bg-purple-light {
+    background: var(--purple-light) !important;
+}
+
+.bg-purple-dark {
+    background: var(--purple-dark) !important;
+}
+
+.bg-purple-darker {
+    background: var(--purple-darker) !important;
+}
+
+/* Gradient Purple Backgrounds */
+.bg-purple-gradient {
+    background: var(--purple-gradient) !important;
+}
+
+.bg-purple-gradient-dark {
+    background: var(--purple-gradient-dark) !important;
+}
+
+.bg-purple-gradient-light {
+    background: var(--purple-gradient-light) !important;
+}
+
+.bg-purple-gradient-horizontal {
+    background: linear-gradient(90deg, var(--purple-primary), var(--purple-light)) !important;
+}
+
+.bg-purple-gradient-vertical {
+    background: linear-gradient(180deg, var(--purple-primary), var(--purple-light)) !important;
+}
+
+.bg-purple-gradient-radial {
+    background: radial-gradient(circle at center, var(--purple-light), var(--purple-primary)) !important;
+}
+
+/* Soft Purple Backgrounds */
+.bg-purple-soft {
+    background: var(--purple-soft) !important;
+}
+
+.bg-purple-soft-light {
+    background: var(--purple-soft-light) !important;
+}
+
+.bg-purple-soft-dark {
+    background: var(--purple-soft-dark) !important;
+}
+
+/* Transparent Purple Backgrounds */
+.bg-purple-transparent {
+    background: rgba(111, 66, 193, 0.1) !important;
+}
+
+.bg-purple-transparent-light {
+    background: rgba(111, 66, 193, 0.05) !important;
+}
+
+.bg-purple-transparent-dark {
+    background: rgba(111, 66, 193, 0.2) !important;
+}
+
+/* =====================================================
+   TEXT COLORS
+===================================================== */
+
+.text-purple {
+    color: var(--purple-primary) !important;
+}
+
+.text-purple-light {
+    color: var(--purple-light) !important;
+}
+
+.text-purple-dark {
+    color: var(--purple-dark) !important;
+}
+
+.text-purple-darker {
+    color: var(--purple-darker) !important;
+}
+
+.text-purple-soft {
+    color: var(--purple-soft-dark) !important;
+}
+
+.text-purple-gradient {
+    background: var(--purple-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* =====================================================
+   BORDER COLORS
+===================================================== */
+
+.border-purple {
+    border-color: var(--purple-primary) !important;
+}
+
+.border-purple-light {
+    border-color: var(--purple-light) !important;
+}
+
+.border-purple-dark {
+    border-color: var(--purple-dark) !important;
+}
+
+.border-purple-soft {
+    border-color: var(--purple-soft-dark) !important;
+}
+
+.border-purple-transparent {
+    border-color: rgba(111, 66, 193, 0.3) !important;
+}
+
+/* =====================================================
+   BUTTON STYLES
+===================================================== */
+
+/* Solid Purple Buttons */
+.btn-purple {
+    background: var(--purple-gradient);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-purple:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-purple);
+    color: white;
+}
+
+.btn-purple:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-purple:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Solid Purple Button Sizes */
+.btn-purple-sm {
+    padding: 5px 15px;
+    font-size: 0.875rem;
+    border-radius: var(--border-radius-sm);
+}
+
+.btn-purple-lg {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: var(--border-radius-lg);
+}
+
+/* Outline Purple Buttons */
+.btn-outline-purple {
+    background: transparent;
+    color: var(--purple-primary);
+    border: 2px solid var(--purple-primary);
+    padding: 8px 18px;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    transition: all var(--transition-normal);
+}
+
+.btn-outline-purple:hover {
+    background: var(--purple-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-purple:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Light Purple Buttons */
+.btn-purple-light {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    transition: all var(--transition-normal);
+}
+
+.btn-purple-light:hover {
+    background: var(--purple-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Purple Button with Ripple Effect */
+.btn-purple-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-purple-ripple:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.btn-purple-ripple:focus:after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 1;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(40, 40);
+    }
+}
+
+/* =====================================================
+   NAVBAR STYLES
+===================================================== */
+
+.navbar.bg-purple {
+    background: var(--purple-gradient) !important;
+    box-shadow: var(--shadow-md);
+}
+
+.navbar.bg-purple .navbar-brand {
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar.bg-purple .navbar-brand i {
+    color: white;
+    margin-right: 8px;
+}
+
+.navbar.bg-purple .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-normal);
+}
+
+.navbar.bg-purple .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.navbar.bg-purple .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: white !important;
+}
+
+.navbar.bg-purple .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar.bg-purple .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar.bg-purple .dropdown-menu {
+    border: none;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 10px;
+}
+
+.navbar.bg-purple .dropdown-item {
+    border-radius: var(--border-radius-sm);
+    padding: 8px 15px;
+    transition: all var(--transition-normal);
+}
+
+.navbar.bg-purple .dropdown-item:hover {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+    transform: translateX(5px);
+}
+
+.navbar.bg-purple .dropdown-item i {
+    color: var(--purple-primary);
+    margin-right: 10px;
+}
+
+/* =====================================================
+   CARD STYLES
+===================================================== */
+
+.card {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    background: var(--white);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--white);
+    padding: 20px;
+}
+
+.card-header.bg-purple {
+    background: var(--purple-gradient) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.card-header.bg-purple h1,
+.card-header.bg-purple h2,
+.card-header.bg-purple h3,
+.card-header.bg-purple h4,
+.card-header.bg-purple h5,
+.card-header.bg-purple h6 {
+    color: white;
+    margin: 0;
+}
+
+.card-header.bg-purple-soft {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+    border-bottom: 2px solid var(--purple-primary);
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.card-footer {
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+    padding: 15px 20px;
+}
+
+/* Card with Purple Border */
+.card-border-purple {
+    border-left: 4px solid var(--purple-primary);
+}
+
+.card-border-purple-light {
+    border-left: 4px solid var(--purple-light);
+}
+
+.card-border-purple-dark {
+    border-left: 4px solid var(--purple-dark);
+}
+
+/* =====================================================
+   FORM ELEMENTS
+===================================================== */
+
+.form-control,
+.form-select {
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-md);
+    padding: 10px 15px;
+    transition: all var(--transition-normal);
+    background: var(--white);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--purple-primary);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    outline: none;
+}
+
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--success);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--danger);
+}
+
+.form-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.form-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Input Groups */
+.input-group-text {
+    background: var(--gray-100);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-md);
+    color: var(--purple-primary);
+}
+
+.input-group .btn-purple {
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+/* Form Check */
+.form-check-input:checked {
+    background-color: var(--purple-primary);
+    border-color: var(--purple-primary);
+}
+
+.form-check-input:focus {
+    border-color: var(--purple-light);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* =====================================================
+   TABLE STYLES
+===================================================== */
+
+.table {
+    background: var(--white);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--purple-primary);
+    padding: 15px;
+}
+
+.table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: var(--purple-soft-light);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: var(--gray-100);
+}
+
+.table-bordered {
+    border: 1px solid var(--gray-200);
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid var(--gray-200);
+}
+
+/* Table with Purple Header */
+.table-purple-header thead th {
+    background: var(--purple-gradient);
+    color: white;
+    border-bottom: none;
+}
+
+/* =====================================================
+   BADGE STYLES
+===================================================== */
+
+.badge {
+    padding: 5px 10px;
+    font-weight: 500;
+    border-radius: 20px;
+}
+
+.badge.bg-purple {
+    background: var(--purple-gradient) !important;
+    color: white;
+}
+
+.badge.bg-purple-soft {
+    background: var(--purple-soft) !important;
+    color: var(--purple-primary);
+}
+
+.badge.bg-purple-outline {
+    background: transparent;
+    color: var(--purple-primary);
+    border: 1px solid var(--purple-primary);
+}
+
+/* Risk Badges */
+.badge-critical {
+    background: var(--danger);
+    color: white;
+}
+
+.badge-high {
+    background: #fd7e14;
+    color: white;
+}
+
+.badge-average {
+    background: var(--warning);
+    color: var(--text-primary);
+}
+
+.badge-safe {
+    background: var(--success);
+    color: white;
+}
+
+/* =====================================================
+   ALERT STYLES
+===================================================== */
+
+.alert {
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 15px 20px;
+    border-left: 4px solid transparent;
+}
+
+.alert-purple {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+    border-left-color: var(--purple-primary);
+}
+
+.alert-purple i {
+    color: var(--purple-primary);
+}
+
+.alert-success {
+    background: var(--success-light);
+    color: #155724;
+    border-left-color: var(--success);
+}
+
+.alert-danger {
+    background: var(--danger-light);
+    color: #721c24;
+    border-left-color: var(--danger);
+}
+
+.alert-warning {
+    background: var(--warning-light);
+    color: #856404;
+    border-left-color: var(--warning);
+}
+
+.alert-info {
+    background: var(--info-light);
+    color: #0c5460;
+    border-left-color: var(--info);
+}
+
+/* =====================================================
+   PROGRESS BAR STYLES
+===================================================== */
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background: var(--gray-200);
+}
+
+.progress-bar {
+    background: var(--purple-gradient);
+    border-radius: 5px;
+}
+
+.progress-bar-striped {
+    background-image: linear-gradient(45deg, 
+        rgba(255,255,255,.15) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255,255,255,.15) 50%, 
+        rgba(255,255,255,.15) 75%, 
+        transparent 75%, 
+        transparent);
+    background-size: 1rem 1rem;
+}
+
+/* =====================================================
+   DROPDOWN STYLES
+===================================================== */
+
+.dropdown-menu {
+    border: none;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 10px;
+}
+
+.dropdown-item {
+    border-radius: var(--border-radius-sm);
+    padding: 8px 15px;
+    transition: all var(--transition-normal);
+}
+
+.dropdown-item:hover {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+}
+
+.dropdown-item:active {
+    background: var(--purple-primary);
+    color: white;
+}
+
+.dropdown-item i {
+    color: var(--purple-primary);
+    margin-right: 10px;
+}
+
+.dropdown-item:active i {
+    color: white;
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--gray-200);
+}
+
+/* =====================================================
+   PAGINATION STYLES
+===================================================== */
+
+.page-item.active .page-link {
+    background: var(--purple-gradient);
+    border-color: var(--purple-primary);
+    color: white;
+}
+
+.page-link {
+    color: var(--purple-primary);
+    border: 1px solid var(--gray-200);
+    padding: 8px 15px;
+    transition: all var(--transition-normal);
+}
+
+.page-link:hover {
+    color: var(--purple-dark);
+    background: var(--purple-soft);
+    border-color: var(--purple-primary);
+}
+
+.page-link:focus {
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* =====================================================
+   MODAL STYLES
+===================================================== */
+
+.modal-header {
+    border-bottom: 1px solid var(--gray-200);
+    padding: 20px;
+}
+
+.modal-header.bg-purple {
+    background: var(--purple-gradient) !important;
+    color: white;
+    border-bottom: none;
+}
+
+.modal-header.bg-purple .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--gray-200);
+    padding: 20px;
+}
+
+/* =====================================================
+   LIST GROUP STYLES
+===================================================== */
+
+.list-group-item {
+    border: 1px solid var(--gray-200);
+    padding: 12px 20px;
+}
+
+.list-group-item.active {
+    background: var(--purple-gradient);
+    border-color: var(--purple-primary);
+    color: white;
+}
+
+.list-group-item-action:hover {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+}
+
+/* =====================================================
+   TOOLTIP STYLES
+===================================================== */
+
+.tooltip .tooltip-inner {
+    background: var(--purple-gradient);
+    border-radius: var(--border-radius-sm);
+    padding: 5px 10px;
+    font-size: 0.875rem;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: var(--purple-primary);
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: var(--purple-primary);
+}
+
+.tooltip.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: var(--purple-primary);
+}
+
+.tooltip.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: var(--purple-primary);
+}
+
+/* =====================================================
+   LOADING SPINNER
+===================================================== */
+
+.spinner-border.text-purple {
+    color: var(--purple-primary) !important;
+}
+
+.spinner-grow.text-purple {
+    color: var(--purple-primary) !important;
+}
+
+/* =====================================================
+   LINK STYLES
+===================================================== */
+
+a {
+    color: var(--purple-primary);
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+
+a:hover {
+    color: var(--purple-dark);
+    text-decoration: underline;
+}
+
+a.text-purple:hover {
+    color: var(--purple-dark) !important;
+}
+
+/* =====================================================
+   BREADCRUMB STYLES
+===================================================== */
+
+.breadcrumb-item a {
+    color: var(--purple-primary);
+}
+
+.breadcrumb-item.active {
+    color: var(--text-muted);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-muted);
+}
+
+/* =====================================================
+   NAV TABS STYLES
+===================================================== */
+
+.nav-tabs .nav-link {
+    color: var(--text-secondary);
+    border: none;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all var(--transition-normal);
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--purple-primary);
+    border: none;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--purple-primary);
+    border: none;
+    border-bottom: 3px solid var(--purple-primary);
+    background: transparent;
+}
+
+.nav-pills .nav-link {
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-normal);
+}
+
+.nav-pills .nav-link:hover {
+    background: var(--purple-soft);
+    color: var(--purple-primary);
+}
+
+.nav-pills .nav-link.active {
+    background: var(--purple-gradient);
+    color: white;
+}
+
+/* =====================================================
+   ACCORDION STYLES
+===================================================== */
+
+.accordion-item {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.accordion-button {
+    padding: 15px 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    background: var(--white);
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--purple-primary);
+    background: var(--purple-soft);
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    border-color: var(--purple-primary);
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236f42c1'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/* =====================================================
+   CUSTOM SCROLLBAR
+===================================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--purple-primary);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--purple-dark);
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--purple-primary) var(--gray-100);
+}
+
+/* =====================================================
+   STATISTICS CARDS
+===================================================== */
+
+.stat-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--purple-gradient);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-circle);
+    background: var(--purple-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--purple-primary);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* =====================================================
+   DASHBOARD CARDS
+===================================================== */
+
+.dashboard-card {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    transition: all var(--transition-normal);
+    margin-bottom: 20px;
+}
+
+.dashboard-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--purple-soft-dark);
+}
+
+.dashboard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--purple-soft);
+}
+
+.dashboard-card-header h5 {
+    margin: 0;
+    color: var(--purple-primary);
+    font-weight: 600;
+}
+
+.dashboard-card-header i {
+    color: var(--purple-light);
+    font-size: 1.5rem;
+}
+
+/* =====================================================
+   TIMELINE STYLES
+===================================================== */
+
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-item {
+    padding-left: 30px;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: var(--purple-soft-dark);
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--purple-gradient);
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -13px;
+    background: white;
+    padding: 5px;
+    border-radius: 50%;
+    color: var(--purple-primary);
+    z-index: 1;
+}
+
+/* =====================================================
+   ROOM ALLOCATION CARDS
+===================================================== */
+
+.room-card {
+    background: var(--white);
+    border-radius: var(--border-radius-md);
+    padding: 15px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--purple-primary);
+    transition: all var(--transition-normal);
+}
+
+.room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.room-card.allocated {
+    border-left-color: var(--success);
+}
+
+.room-card.partial {
+    border-left-color: var(--warning);
+}
+
+.room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.room-number {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--purple-primary);
+}
+
+.room-capacity {
+    background: var(--gray-200);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+/* =====================================================
+   INVIGILATOR TABLE
+===================================================== */
+
+.invigilator-table th {
+    background: var(--purple-gradient);
+    color: white;
+    padding: 12px;
+    font-weight: 500;
+}
+
+.invigilator-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.invigilator-table tr:hover {
+    background: var(--purple-soft-light);
+}
+
+/* =====================================================
+   AI PROGRESS INDICATORS
+===================================================== */
+
+.ai-progress {
+    position: relative;
+    height: 30px;
+    background: var(--gray-200);
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.ai-progress-bar {
+    height: 100%;
+    background: var(--purple-gradient);
+    transition: width var(--transition-normal);
+    position: relative;
+    color: white;
+    line-height: 30px;
+    padding-left: 10px;
+    font-size: 0.9rem;
+}
+
+/* =====================================================
+   CALENDAR STYLES
+===================================================== */
+
+.exam-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.calendar-day {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    min-height: 100px;
+    padding: 5px;
+    position: relative;
+    border-radius: var(--border-radius-sm);
+}
+
+.calendar-day.today {
+    background: var(--purple-soft);
+    border-color: var(--purple-primary);
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.exam-indicator {
+    font-size: 0.7rem;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.exam-indicator.morning {
+    background: var(--info-light);
+    color: var(--info);
+}
+
+.exam-indicator.afternoon {
+    background: var(--warning-light);
+    color: #856404;
+}
+
+/* =====================================================
+   UTILITY CLASSES
+===================================================== */
+
+/* Border Utilities */
+.rounded-purple {
+    border-radius: var(--border-radius-md);
+}
+
+.rounded-purple-lg {
+    border-radius: var(--border-radius-lg);
+}
+
+.rounded-purple-circle {
+    border-radius: var(--border-radius-circle);
+}
+
+/* Shadow Utilities */
+.shadow-purple {
+    box-shadow: var(--shadow-purple) !important;
+}
+
+.shadow-purple-sm {
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow-purple-md {
+    box-shadow: var(--shadow-md) !important;
+}
+
+.shadow-purple-lg {
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: var(--purple-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hover Effects */
+.hover-purple:hover {
+    background: var(--purple-soft) !important;
+    color: var(--purple-primary) !important;
+}
+
+.hover-border-purple:hover {
+    border-color: var(--purple-primary) !important;
+}
+
+/* Focus Effects */
+.focus-purple:focus {
+    border-color: var(--purple-primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25) !important;
+}
+
+/* =====================================================
+   MEDIA QUERIES FOR PURPLE THEME
+===================================================== */
+
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-card {
+        padding: 15px;
+    }
+    
+    .exam-calendar {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-purple,
+    .btn-outline-purple {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .card-header {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+}

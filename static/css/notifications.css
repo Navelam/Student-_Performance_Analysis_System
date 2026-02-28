@@ -1,0 +1,155 @@
+/* Notification System Styles */
+
+/* Notification Badge */
+#notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    padding: 3px 6px;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    font-size: 0.7rem;
+    min-width: 18px;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    width: 380px;
+    max-height: 500px;
+    overflow: hidden;
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+    border: 1px solid #e9ecef;
+}
+
+.notification-dropdown .dropdown-header {
+    background: linear-gradient(135deg, #6f42c1, #9b59b6);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+}
+
+.notification-dropdown .dropdown-header button {
+    background: white;
+    color: #6f42c1;
+    border: none;
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: 15px;
+}
+
+.notification-dropdown .dropdown-header button:hover {
+    background: #f8f9fa;
+}
+
+/* Notification List */
+#notification-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+    border-left-color: #6f42c1;
+}
+
+.notification-item.bg-light-unread {
+    background-color: #f0f0ff;
+    border-left-color: #6f42c1;
+}
+
+/* Notification Icons */
+.notification-icon-large {
+    animation: gentle-shake 3s infinite;
+}
+
+@keyframes gentle-shake {
+    0%, 100% { transform: rotate(0deg); }
+    5% { transform: rotate(10deg); }
+    10% { transform: rotate(-10deg); }
+    15% { transform: rotate(5deg); }
+    20% { transform: rotate(-5deg); }
+    25% { transform: rotate(0deg); }
+}
+
+/* Custom Scrollbar for Notification List */
+#notification-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+#notification-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#notification-list::-webkit-scrollbar-thumb {
+    background: #6f42c1;
+    border-radius: 5px;
+}
+
+#notification-list::-webkit-scrollbar-thumb:hover {
+    background: #5a32a3;
+}
+
+/* Toast Notifications */
+.toast {
+    min-width: 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 576px) {
+    .notification-dropdown {
+        width: 300px;
+        right: -50px !important;
+    }
+    
+    .notification-dropdown::before {
+        right: 60px !important;
+    }
+    
+    .notification-item {
+        padding: 10px !important;
+    }
+    
+    .notification-item h6 {
+        font-size: 0.9rem;
+    }
+    
+    .notification-item small {
+        font-size: 0.7rem;
+    }
+}

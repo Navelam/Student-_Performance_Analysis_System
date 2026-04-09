@@ -199,7 +199,7 @@ def create_notification(title, message, notification_type, target_role, user_id=
 def notify_exam_timetable_published(academic_year, semester_info):
     """Create notification when exam timetable is published"""
     return create_notification(
-        title='📅 Exam Timetable Published',
+        title=' Exam Timetable Published',
         message=f'Exam timetable for {academic_year} ({semester_info}) has been published.',
         notification_type='timetable',
         target_role='all'
@@ -217,7 +217,7 @@ def notify_room_allocation_completed(exam_date):
 def notify_invigilator_assigned(teacher_id, teacher_name, exam_date, room_number, exam_time):
     """Create notification when invigilator is assigned"""
     return create_notification(
-        title='👨‍🏫 Invigilation Duty Assigned',
+        title=' Invigilation Duty Assigned',
         message=f'You have been assigned as invigilator for Room {room_number} on {exam_date} at {exam_time}.',
         notification_type='invigilation',
         target_role='teachers',
@@ -612,11 +612,11 @@ def run_academic_setup():
     try:
         dept_count, subject_count = setup_academic_structure()
         
-        flash(f'✅ Academic setup complete! Created/verified {dept_count} departments and {subject_count} subjects.', 'success')
+        flash(f' Academic setup complete! Created/verified {dept_count} departments and {subject_count} subjects.', 'success')
         
         # Create notification
         create_notification(
-            title='🎓 Academic Structure Initialized',
+            title=' Academic Structure Initialized',
             message='All departments and subjects have been set up successfully.',
             notification_type='general',
             target_role='all'
@@ -624,7 +624,7 @@ def run_academic_setup():
         
     except Exception as e:
         db.session.rollback()
-        flash(f'❌ Error during academic setup: {str(e)}', 'danger')
+        flash(f' Error during academic setup: {str(e)}', 'danger')
     
     return redirect(url_for('coordinator.academic_setup'))
 
@@ -765,7 +765,7 @@ def run_initial_setup():
         </head>
         <body>
             <div class="container">
-                <h1>✅ Initial Academic Setup Complete!</h1>
+                <h1> Initial Academic Setup Complete!</h1>
                 <p class="success">All academic data has been created successfully.</p>
                 
                 <h3>Created:</h3>
@@ -817,7 +817,7 @@ def db_status():
     </head>
     <body>
         <div class="container">
-            <h1>📊 Database Status</h1>
+            <h1> Database Status</h1>
     """
     
     # Count tables
@@ -835,7 +835,7 @@ def db_status():
             <tr><td>Courses</td><td>{course_count}</td><td class="{'ok' if course_count > 0 else 'missing'}">{'✅ OK' if course_count > 0 else '❌ Missing'}</td></tr>
             <tr><td>Semesters</td><td>{sem_count}</td><td class="{'ok' if sem_count >= 8 else 'missing'}">{'✅ OK' if sem_count >= 8 else '❌ Missing'}</td></tr>
             <tr><td>Subjects</td><td>{subject_count}</td><td class="{'ok' if subject_count > 0 else 'missing'}">{'✅ OK' if subject_count > 0 else '❌ Missing'}</td></tr>
-            <tr><td>Exams</td><td>{exam_count}</td><td>{'📅 Scheduled' if exam_count > 0 else '⏳ None'}</td></tr>
+            <tr><td>Exams</td><td>{exam_count}</td><td>{'Scheduled' if exam_count > 0 else '⏳ None'}</td></tr>
         </table>
     """
     
@@ -1054,7 +1054,7 @@ def process_auto_timetable(academic_year, exam_cycle, semester_numbers, start_da
                 db.session.commit()
 
         if total_saved > 0:
-            flash(f'✅ Timetable generated successfully ({total_saved} exams)', 'success')
+            flash(f' Timetable generated successfully ({total_saved} exams)', 'success')
         else:
             flash('No subjects found for selected semesters', 'warning')
 
@@ -1150,7 +1150,7 @@ def manual_allocate():
         db.session.commit()
 
         if saved_count > 0:
-            flash(f'✅ Timetable updated successfully ({saved_count} subjects)', 'success')
+            flash(f' Timetable updated successfully ({saved_count} subjects)', 'success')
         else:
             flash('No subjects selected', 'warning')
 
@@ -1243,7 +1243,7 @@ def clear_timetable(academic_year):
         ExamTimetable.query.filter_by(academic_year=academic_year).delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared {count} exams for academic year {academic_year}', 'success')
+        flash(f' Successfully cleared {count} exams for academic year {academic_year}', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1267,7 +1267,7 @@ def clear_all_exams():
         ExamTimetable.query.delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared ALL {count} exams from the database', 'success')
+        flash(f' Successfully cleared ALL {count} exams from the database', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1315,7 +1315,7 @@ def publish_timetable():
         if count > 0:
             semester_info = get_semester_display('FULL')
             notify_exam_timetable_published(academic_year, semester_info)
-            flash(f'✅ Published {count} exams for {academic_year}', 'success')
+            flash(f' Published {count} exams for {academic_year}', 'success')
         else:
             flash('No exams found to publish', 'warning')
             
@@ -1444,7 +1444,7 @@ def allocate_all_dates():
         if processed_dates:
             notify_room_allocation_completed(processed_dates[0].strftime('%Y-%m-%d'))
         
-        flash(f'✅ Successfully allocated {total_rooms_created} rooms across {total_dates} dates', 'success')
+        flash(f' Successfully allocated {total_rooms_created} rooms across {total_dates} dates', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1513,7 +1513,7 @@ def allocate_single_date():
             rooms_created_total += rooms_created
         
         notify_room_allocation_completed(exam_date)
-        flash(f'✅ Successfully allocated {rooms_created_total} rooms for {exam_date}', 'success')
+        flash(f' Successfully allocated {rooms_created_total} rooms for {exam_date}', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1584,7 +1584,7 @@ def clear_room_allocation(date):
         ExamRoomAllocation.query.filter_by(exam_date=date_obj).delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared {room_count} room allocations for {date}', 'success')
+        flash(f' Successfully cleared {room_count} room allocations for {date}', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1610,7 +1610,7 @@ def clear_all_room_allocations():
         ExamRoomAllocation.query.delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared ALL {room_count} rooms and {seating_count} seating arrangements from ALL dates', 'success')
+        flash(f' Successfully cleared ALL {room_count} rooms and {seating_count} seating arrangements from ALL dates', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1767,7 +1767,7 @@ def allocate_invigilators_all():
                 exam_time=assignment.exam_time
             )
         
-        flash(f'✅ Successfully allocated {total_assignments} invigilators across {len(exam_dates)} dates', 'success')
+        flash(f' Successfully allocated {total_assignments} invigilators across {len(exam_dates)} dates', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -1845,7 +1845,7 @@ def allocate_invigilators_date():
         
         db.session.commit()
         
-        flash(f'✅ Successfully allocated {len(assignments)} invigilators for {exam_date}', 'success')
+        flash(f' Successfully allocated {len(assignments)} invigilators for {exam_date}', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -2052,7 +2052,7 @@ def clear_invigilators(date):
         InvigilatorAssignment.query.filter_by(exam_date=date_obj).delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared {count} invigilator assignments for {date}', 'success')
+        flash(f' Successfully cleared {count} invigilator assignments for {date}', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -2076,7 +2076,7 @@ def clear_all_invigilators():
         InvigilatorAssignment.query.delete()
         db.session.commit()
         
-        flash(f'✅ Successfully cleared ALL {count} invigilator assignments', 'success')
+        flash(f' Successfully cleared ALL {count} invigilator assignments', 'success')
         
     except Exception as e:
         db.session.rollback()
@@ -2203,7 +2203,7 @@ def create_notification():
             db.session.add(notification)
             db.session.commit()
             
-            flash(f'✅ Notification created successfully', 'success')
+            flash(f' Notification created successfully', 'success')
             return redirect(url_for('coordinator.notifications_dashboard'))
             
         except Exception as e:
@@ -2398,7 +2398,7 @@ def create_coordinator_user():
     return """
     <html>
     <body>
-        <h1>✅ Coordinator Created!</h1>
+        <h1> Coordinator Created!</h1>
         <p>Username: coordinator</p>
         <p>Password: coord123</p>
         <p><a href="/auth/login">Go to Login</a></p>

@@ -238,28 +238,28 @@ def ai_assign_teachers():
                 # Commit all changes
                 db.session.commit()
                 
-                message = f"✅ AI Assignment Complete!\n"
+                message = f" AI Assignment Complete!\n"
                 message += f"   • Created {added_count} new assignments\n"
                 message += f"   • Total subjects assigned: {result.get('total_assigned', 0)}\n"
                 
                 # Add teacher distribution
                 if 'teacher_distribution' in result:
-                    message += f"\n   📊 Teacher Workload:\n"
+                    message += f"\n    Teacher Workload:\n"
                     for teacher, count in result['teacher_distribution'].items():
                         message += f"      - {teacher}: {count}/5 subjects\n"
                 
                 if result.get('failed_subjects'):
-                    message += f"\n   ⚠️ Failed to assign: {len(result['failed_subjects'])} subjects"
+                    message += f"\n    Failed to assign: {len(result['failed_subjects'])} subjects"
                 
                 flash(message, 'success')
             else:
                 flash('No new assignments were created', 'warning')
         else:
-            flash(f"❌ {result['message']}", 'danger')
+            flash(f" {result['message']}", 'danger')
             
     except Exception as e:
         db.session.rollback()
-        flash(f'❌ Error in AI assignment: {str(e)}', 'danger')
+        flash(f' Error in AI assignment: {str(e)}', 'danger')
         print(f"AI Assignment Error: {str(e)}")
         
     return redirect(url_for('hod.assign_teachers'))
@@ -323,11 +323,11 @@ def reset_assignments():
         
         db.session.commit()
         
-        flash(f'✅ Reset {result} teacher assignments successfully!', 'success')
+        flash(f' Reset {result} teacher assignments successfully!', 'success')
         
     except Exception as e:
         db.session.rollback()
-        flash(f'❌ Error resetting assignments: {str(e)}', 'danger')
+        flash(f'Error resetting assignments: {str(e)}', 'danger')
         
     return redirect(url_for('hod.assign_teachers'))
 

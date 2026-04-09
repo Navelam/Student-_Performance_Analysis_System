@@ -979,7 +979,7 @@ def save_marks(subject_id):
             db.session.add(attendance_record)
         
         db.session.commit()
-        flash(f'✅ Marks {action_msg} for {student.name}', 'success')
+        flash(f' Marks {action_msg} for {student.name}', 'success')
         
         # Handle navigation based on action
         if action == 'save_next':
@@ -1086,7 +1086,7 @@ def bulk_marks_entry(subject_id):
             success_count += 1
         
         db.session.commit()
-        flash(f'✅ Saved marks for {success_count} students', 'success')
+        flash(f' Saved marks for {success_count} students', 'success')
         return redirect(url_for('teacher.student_results', subject_id=subject_id))
     
     # Get existing marks for prefilling
@@ -1328,10 +1328,10 @@ def save_attendance(subject_id):
             'errors': errors
         })
     
-    flash(f'✅ Saved attendance for {success_count} students', 'success')
+    flash(f' Saved attendance for {success_count} students', 'success')
     if errors:
         for error in errors[:3]:
-            flash(f'⚠️ {error}', 'warning')
+            flash(f' {error}', 'warning')
     
     return redirect(url_for('teacher.attendance_report', subject_id=subject_id, month=month, year=year))
 
@@ -1753,7 +1753,7 @@ def add_student():
             db.session.add(student)
             db.session.commit()
             
-            flash(f'✅ Student {name} added successfully! Username: {username}, Password: {password}', 'success')
+            flash(f' Student {name} added successfully! Username: {username}, Password: {password}', 'success')
             
         except Exception as e:
             db.session.rollback()
@@ -1894,7 +1894,7 @@ def upload_question_paper(subject_id):
         db.session.add(paper)
         db.session.commit()
         
-        flash(f'✅ Question paper "{title}" uploaded successfully!', 'success')
+        flash(f' Question paper "{title}" uploaded successfully!', 'success')
         return redirect(url_for('teacher.question_papers'))
     
     # GET request - show upload form

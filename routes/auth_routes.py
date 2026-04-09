@@ -496,7 +496,7 @@ def debug_users():
         </style>
     </head>
     <body>
-        <h2>🔍 User Database Debug</h2>
+        <h2> User Database Debug</h2>
         <table>
             <tr>
                 <th>ID</th>
@@ -513,7 +513,7 @@ def debug_users():
     for user in users:
         if user.role == 'hod':
             password_check = check_password_hash(user.password_hash, test_password)
-            status = f"✅ Valid ({test_password})" if password_check else "❌ Invalid"
+            status = f" Valid ({test_password})" if password_check else "❌ Invalid"
             color = "success" if password_check else "error"
         else:
             status = "N/A"
@@ -589,7 +589,7 @@ def create_hod_fresh():
     </head>
     <body>
         <div class="container">
-            <h1 class="success">✅ Fresh HOD Created!</h1>
+            <h1 class="success">Fresh HOD Created!</h1>
             <div class="info">
                 <p><strong>Username:</strong> hod_cs</p>
                 <p><strong>Password:</strong> hod123</p>
